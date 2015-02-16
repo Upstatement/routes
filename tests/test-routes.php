@@ -52,7 +52,7 @@ class TestRoutes extends WP_UnitTestCase {
 		Routes::map('randomthing/'.$post_name, function() use ($phpunit) {
 			global $matches;
 			$phpunit->assertTrue(true);
-			$matches[] = true; 
+			$matches[] = true;
 		});
 		$this->go_to(home_url('/randomthing/'.$post_name));
 		$this->matchRoutes();
@@ -73,8 +73,21 @@ class TestRoutes extends WP_UnitTestCase {
 		$this->assertEquals(0, count($matches));
 	}
 
+    function testRouteWithClassCallback() {
+        Routes::map('classroute', array($this, 'testCallback'));
+        $this->go_to(home_url('classroute'));
+        $this->matchRoutes();
+        global $matches;
+        $this->assertEquals(1, count($matches));
+    }
+
 	function matchRoutes() {
 		global $upstatement_routes;
 		$upstatement_routes->init();
 	}
+
+    function testCallback() {
+        global $matches;
+        $matches[] = true;
+    }
 }

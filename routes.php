@@ -36,8 +36,13 @@ class Routes {
     }
 
     /**
-     * @param string $route
-     * @param callable $callback
+     * @param string $route         A string to match (ex: 'myfoo')
+     * @param callable $callback    A function to run, examples:
+     *                              Routes::map('myfoo', 'my_callback_function');
+     *                              Routes::map('mybaq', array($my_class, 'method'));
+     *                              Routes::map('myqux', function() {
+     *                                  //stuff goes here
+     *                              });
      */
     public static function map($route, $callback, $args = array()) {
         global $upstatement_routes;
@@ -62,13 +67,16 @@ class Routes {
     }
 
     /**
-     * @param array $template
-     * @param mixed $query
-     * @param int $status_code
-     * @param bool $tparams
+     * @param array $template           A php file to load (ex: 'single.php')
+     * @param array|bool $tparams       An array of data to send to the php file. Inside the php file
+     *                                  this data can be accessed via:
+     *                                  global $params;
+     * @param int $status_code          A code for the status (ex: 200)
+     * @param WP_Query $query           Use a WP_Query object in the template file instead of
+     *                                  the default query
      * @return bool
      */
-    public static function load($template, $query = false, $status_code = 200, $tparams = false) {
+    public static function load($template, $tparams = false, $query = false, $status_code = 200) {
         $fullPath = is_readable($template);
         if (!$fullPath) {
             $template = locate_template($template);
