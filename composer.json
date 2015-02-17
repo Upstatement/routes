@@ -24,7 +24,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
-        "wp-cli/wp-cli" : "*"
+        "wp-cli/wp-cli" : "*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "repositories": [
         {
