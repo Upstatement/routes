@@ -29,19 +29,12 @@
     },
     "repositories": [
         {
-            "type" : "package",
-            "package" : {
-                "name" : "jarednova/php-router",
-                "version" : "1.0.1",
-                "dist" : {
-                    "url" : "https://github.com/jarednova/PHP-Router/archive/fix_psr_0.zip",
-                    "type" : "zip"
-                },
-                "autoload": {
+            "type": "vcs",
+            "url": "https://github.com/jarednova/php-router",
+            "autoload": {
                     "psr-0": {
                         "PHPRouter": "src/"
                     }
-                }
             }
         }
     ]
