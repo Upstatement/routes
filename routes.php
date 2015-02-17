@@ -30,7 +30,7 @@ class Routes {
             if ($route) {
                 $callback = $route->getTarget();
                 $params = $route->getParameters();
-                $callback($params);
+                call_user_func_array($callback, $params);
             }
         }
     }
