@@ -47,23 +47,19 @@ class Routes {
     public static function map($route, $callback, $args = array()) {
         global $upstatement_routes;
         if (!isset($upstatement_routes->router)) {
-            if (class_exists('PHPRouter\Router')){
-                $upstatement_routes->router = new PHPRouter\Router();
-                $site_url = get_bloginfo('url');
-                $site_url_parts = explode('/', $site_url);
-                $site_url_parts = array_slice($site_url_parts, 3);
-                $base_path = implode('/', $site_url_parts);
-                if (!$base_path || strpos($route, $base_path) === 0) {
-                    $base_path = '/';
-                } else {
-                    $base_path = '/' . $base_path . '/';
-                }
-                $upstatement_routes->router->setBasePath($base_path);
+            $upstatement_routes->router = new PHPRouter\Router();
+            $site_url = get_bloginfo('url');
+            $site_url_parts = explode('/', $site_url);
+            $site_url_parts = array_slice($site_url_parts, 3);
+            $base_path = implode('/', $site_url_parts);
+            if (!$base_path || strpos($route, $base_path) === 0) {
+                $base_path = '/';
+            } else {
+                $base_path = '/' . $base_path . '/';
             }
+            $upstatement_routes->router->setBasePath($base_path);
         }
-        if (class_exists('PHPRouter\Router')){
-            $upstatement_routes->router->map($route, $callback, $args);
-        }
+        $upstatement_routes->router->map($route, $callback, $args);
     }
 
     /**
