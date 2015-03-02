@@ -25,7 +25,7 @@ class TestRoutes extends WP_UnitTestCase {
     }
 
     function testRouterClass(){
-        $this->assertTrue(class_exists('PHPRouter\Router'));
+        $this->assertTrue(class_exists('AltoRouter'));
     }
 
     function testAppliedRoute(){
