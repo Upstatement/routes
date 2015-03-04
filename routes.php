@@ -61,7 +61,24 @@ class Routes {
 			}
 			$upstatement_routes->router->setBasePath($base_path);
 		}
+		$route = self::convert_route($route);
 		$upstatement_routes->router->map('GET|POST', $route, $callback, $args);
+	}
+
+	/**
+	 * @return string 					A string in a format for AltoRouter
+	 *                       			ex: [:my_param]
+	 */
+	public static function convert_route($route_string) {
+		if (strpos($route_string, '[') > -1) {
+			return $route_string;
+		}
+		$route_string = preg_replace('/(:)\w+/', '/[$0]', $route_string);
+		$route_string = str_replace('[[', '[', $route_string);
+		$route_string = str_replace(']]', ']', $route_string);
+		$route_string = str_replace('[/:', '[:', $route_string);
+		$route_string = str_replace('//[', '/[', $route_string);
+		return $route_string;
 	}
 
 	/**

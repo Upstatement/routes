@@ -1,5 +1,7 @@
 # Routes
-Simple name. Simple routing.
+Simple routing for WordPress.
+
+[![Build Status](https://travis-ci.org/Upstatement/routes.svg?branch=master)](https://travis-ci.org/Upstatement/routes)
 
 ### Usage
 ```php
