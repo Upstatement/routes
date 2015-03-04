@@ -158,7 +158,7 @@ class TestRoutes extends WP_UnitTestCase {
 
 	function matchRoutes() {
 		global $upstatement_routes;
-		$upstatement_routes->init();
+		$upstatement_routes->match_current_request();
 	}
 
 	static function testCallback() {

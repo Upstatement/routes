@@ -20,10 +20,10 @@ class Routes {
 	protected $router;
 
 	function __construct(){
-		add_action('init', array($this, 'init'));
+		add_action('init', array($this, 'match_current_request') );
 	}
 
-	function init() {
+	function match_current_request() {
 		global $upstatement_routes;
 		if (isset($upstatement_routes->router)) {
 			$route = $upstatement_routes->router->match();
