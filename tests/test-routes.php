@@ -98,6 +98,24 @@ class TestRoutes extends WP_UnitTestCase {
 		$this->assertEquals(2, count($matches));
 	}
 
+	function testRouteWithMultiArgumentsOldStyle() {
+		$phpunit = $this;
+		global $matches;
+		Routes::map('studio/:studio/movie/:movie', function($params) use ($phpunit) {
+			global $matches;
+			$matches = array();
+			if ($params['studio'] == 'universal') {
+				$matches[] = true;
+			}
+			if ($params['movie'] == 'brazil') {
+				$matches[] = true;
+			}
+		});
+		$this->go_to(home_url('/studio/universal/movie/brazil/'));
+		$this->matchRoutes();
+		$this->assertEquals(2, count($matches));
+	}
+
 	function testRouteAgainstPostName(){
 		$post_name = 'jared';
 		$post = $this->factory->post->create(array('post_title' => 'Jared', 'post_name' => $post_name));
