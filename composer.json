@@ -28,8 +28,8 @@
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "psr-4" : {
-            "Routes\\" : ""
+        "psr-0" : {
+            "Routes" : ""
         }
     }
 }
