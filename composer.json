@@ -26,5 +26,10 @@
         "phpunit/phpunit": "3.7.*",
         "wp-cli/wp-cli" : "*",
         "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload": {
+        "psr-4" : {
+            "Routes" : ""
+        }
     }
 }
