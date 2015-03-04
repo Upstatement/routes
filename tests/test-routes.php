@@ -35,6 +35,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$phpunit = $this;
 		Routes::map('foo', function() use ($phpunit) {
 			global $matches;
+			$matches = array();
 			$phpunit->assertTrue(true);
 			$matches[] = true;
 		});
@@ -51,6 +52,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$phpunit = $this;
 		Routes::map('mything/:slug', function($params) use ($phpunit) {
 			global $matches;
+			$matches = array();
 			if ('ziggy' == $params['slug']) {
 				$matches[] = true;
 			}
@@ -68,6 +70,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$phpunit = $this;
 		Routes::map('mything/[*:slug]', function($params) use ($phpunit) {
 			global $matches;
+			$matches = array();
 			if ('ziggy' == $params['slug']) {
 				$matches[] = true;
 			}
@@ -75,6 +78,24 @@ class TestRoutes extends WP_UnitTestCase {
 		$this->go_to(home_url('/mything/'.$post_name));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
+	}
+
+	function testRouteWithMultiArguments() {
+		$phpunit = $this;
+		Routes::map('artist/[:artist]/song/[:song]', function($params) use ($phpunit) {
+			global $matches;
+			$matches = array();
+			if ($params['artist'] == 'smashing-pumpkins') {
+				$matches[] = true;
+			}
+			if ($params['song'] == 'mayonaise') {
+				$matches[] = true;
+			}
+		});
+		$this->go_to(home_url('/artist/smashing-pumpkins/song/mayonaise'));
+		$this->matchRoutes();
+		global $matches;
+		$this->assertEquals(2, count($matches));
 	}
 
 	function testRouteAgainstPostName(){
@@ -85,6 +106,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$phpunit = $this;
 		Routes::map('randomthing/'.$post_name, function() use ($phpunit) {
 			global $matches;
+			$matches = array();
 			$phpunit->assertTrue(true);
 			$matches[] = true;
 		});
@@ -99,6 +121,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$matches = array();
 		$phpunit = $this;
 		Routes::map('foo', function() use ($phpunit){
+			$matches = array();
 			$phpunit->assertTrue(false);
 			$matches[] = true;
 		});
