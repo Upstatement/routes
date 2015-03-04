@@ -23,7 +23,7 @@ class Routes {
 		add_action('init', array($this, 'match_current_request') );
 	}
 
-	function match_current_request() {
+	static function match_current_request() {
 		global $upstatement_routes;
 		if (isset($upstatement_routes->router)) {
 			$route = $upstatement_routes->router->match();
