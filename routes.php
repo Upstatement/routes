@@ -20,7 +20,7 @@ class Routes {
 	protected $router;
 
 	function __construct(){
-		//add_action('init', array($this, 'match_current_request') );
+		add_action('init', array($this, 'match_current_request') );
 	}
 
 	static function match_current_request() {
