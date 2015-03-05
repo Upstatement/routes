@@ -1,6 +1,5 @@
 {
     "name"       : "upstatement/routes",
-    "type"       : "wordpress-plugin",
     "description": "Manage rewrites and routes in WordPress with this dead-simple plugin",
     "keywords"   : ["routes", "routing", "rewrite", "redirects"],
     "homepage"   : "http://routes.upstatement.com",
