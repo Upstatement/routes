@@ -62,7 +62,6 @@ class Routes {
 			$upstatement_routes->router->setBasePath($base_path);
 		}
 		$route = self::convert_route($route);
-		error_log( trailingslashit($route) );
 		$upstatement_routes->router->map('GET|POST', trailingslashit($route), $callback, $args);
 		$upstatement_routes->router->map('GET|POST', untrailingslashit($route), $callback, $args);
 	}
@@ -80,6 +79,9 @@ class Routes {
 		$route_string = str_replace(']]', ']', $route_string);
 		$route_string = str_replace('[/:', '[:', $route_string);
 		$route_string = str_replace('//[', '/[', $route_string);
+		if ( strpos($route_string, '/') === 0 ) {
+			$route_string = substr($route_string, 1);
+		}
 		return $route_string;
 	}
 

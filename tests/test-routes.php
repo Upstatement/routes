@@ -178,6 +178,37 @@ class TestRoutes extends WP_UnitTestCase {
 		$this->assertEquals(1, count($matches));
 	}
 
+
+	function testVerySimpleRouteTrailingSlashInRequestAndMapping(){
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		global $matches;
+		$matches = array();
+		$phpunit = $this;
+		Routes::map('zappers', function() use ($phpunit) {
+			global $matches;
+			$matches = array();
+			$matches[] = true;
+		});
+		$this->go_to(home_url('zappers/'));
+		$this->matchRoutes();
+		$this->assertEquals(1, count($matches));
+	}
+
+	function testVerySimpleRoutePreceedingSlash(){
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		global $matches;
+		$matches = array();
+		$phpunit = $this;
+		Routes::map('/gobbles', function() use ($phpunit) {
+			global $matches;
+			$matches = array();
+			$matches[] = true;
+		});
+		$this->go_to(home_url('gobbles'));
+		$this->matchRoutes();
+		$this->assertEquals(1, count($matches));
+	}
+
 	function testFailedRoute(){
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
