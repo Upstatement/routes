@@ -20,7 +20,7 @@ class Routes {
 	protected $router;
 
 	function __construct(){
-		add_action('init', array($this, 'match_current_request') );
+		//add_action('init', array($this, 'match_current_request') );
 	}
 
 	static function match_current_request() {
@@ -62,7 +62,9 @@ class Routes {
 			$upstatement_routes->router->setBasePath($base_path);
 		}
 		$route = self::convert_route($route);
-		$upstatement_routes->router->map('GET|POST', $route, $callback, $args);
+		error_log( trailingslashit($route) );
+		$upstatement_routes->router->map('GET|POST', trailingslashit($route), $callback, $args);
+		$upstatement_routes->router->map('GET|POST', untrailingslashit($route), $callback, $args);
 	}
 
 	/**
