@@ -141,7 +141,6 @@ class TestRoutes extends WP_UnitTestCase {
 		Routes::map('crackers', function() use ($phpunit) {
 			global $matches;
 			$matches = array();
-			$phpunit->assertTrue(true);
 			$matches[] = true;
 		});
 		$this->go_to(home_url('crackers'));
@@ -157,10 +156,24 @@ class TestRoutes extends WP_UnitTestCase {
 		Routes::map('bip/', function() use ($phpunit) {
 			global $matches;
 			$matches = array();
-			$phpunit->assertTrue(true);
 			$matches[] = true;
 		});
 		$this->go_to(home_url('bip'));
+		$this->matchRoutes();
+		$this->assertEquals(1, count($matches));
+	}
+
+	function testVerySimpleRouteTrailingSlashInRequest(){
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		global $matches;
+		$matches = array();
+		$phpunit = $this;
+		Routes::map('bopp', function() use ($phpunit) {
+			global $matches;
+			$matches = array();
+			$matches[] = true;
+		});
+		$this->go_to(home_url('bopp/'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
 	}
