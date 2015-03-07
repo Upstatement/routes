@@ -2,6 +2,7 @@
 Simple routing for WordPress.
 
 [![Build Status](https://travis-ci.org/Upstatement/routes.svg?branch=master)](https://travis-ci.org/Upstatement/routes)
+[![Coverage Status](https://coveralls.io/repos/Upstatement/routes/badge.svg?branch=master)](https://coveralls.io/r/Upstatement/routes?branch=master)
 
 ### Usage
 ```php
