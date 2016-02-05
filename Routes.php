@@ -21,12 +21,16 @@ class Routes {
 
 	function __construct(){
 		add_action('init', array($this, 'match_current_request') );
+		add_action('wp_loaded', array($this, 'match_current_request') );
 	}
 
 	static function match_current_request() {
 		global $upstatement_routes;
 		if (isset($upstatement_routes->router)) {
 			$route = $upstatement_routes->router->match();
+			
+			unset($upstatement_routes->router);
+			
 			if ($route && isset($route['target'])) {
 				if ( isset($route['params']) ) {
 					call_user_func($route['target'], $route['params']);
