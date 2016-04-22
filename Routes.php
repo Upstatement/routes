@@ -4,7 +4,7 @@ Plugin Name: Routes
 Plugin URI: http://routes.upstatement.com
 Description: The WordPress Timber Library allows you to write themes using the power Twig templates
 Author: Jared Novack + Upstatement
-Version: 0.1
+Version: 0.3.1
 Author URI: http://upstatement.com/
 
 Usage:
