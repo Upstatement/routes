@@ -1,8 +1,10 @@
 # Routes
 Simple routing for WordPress.
 
-[![Build Status](https://travis-ci.org/Upstatement/routes.svg?branch=master)](https://travis-ci.org/Upstatement/routes)
-[![Coverage Status](https://coveralls.io/repos/Upstatement/routes/badge.svg?branch=master)](https://coveralls.io/r/Upstatement/routes?branch=master)
+[![Build Status](https://img.shields.io/travis/Upstatement/routes/master.svg?style=flat-square)](https://travis-ci.org/Upstatement/routes)
+[![Coverage Status](https://img.shields.io/coveralls/upstatement/routes.svg?style=flat-square)](https://coveralls.io/r/Upstatement/routes?branch=master)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/Upstatement/routes.svg?style=flat-square)]()
+
 
 ### Usage
 ```php
