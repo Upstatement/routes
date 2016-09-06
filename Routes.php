@@ -97,9 +97,10 @@ class Routes {
 	 * @param int $status_code          A code for the status (ex: 200)
 	 * @param WP_Query $query           Use a WP_Query object in the template file instead of
 	 *                                  the default query
+	 * @param int $priority		    The priority used by the "template_include" filter
 	 * @return bool
 	 */
-	public static function load($template, $tparams = false, $query = false, $status_code = 200) {
+	public static function load($template, $tparams = false, $query = false, $status_code = 200, $priority = 10) {
 		$fullPath = is_readable($template);
 		if (!$fullPath) {
 			$template = locate_template($template);
@@ -146,7 +147,7 @@ class Routes {
 		if ($template) {
 			add_filter('template_include', function($t) use ($template) {
 				return $template;
-			});
+			}, $priority);
 			return true;
 		}
 		return false;
