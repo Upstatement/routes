@@ -1,10 +1,14 @@
 {
-    "name"       : "upstatement/routes",
+    "name"       : "medamine99/Wordpress-Routes",
     "description": "Manage rewrites and routes in WordPress with this dead-simple plugin",
     "keywords"   : ["routes", "routing", "rewrite", "redirects"],
-    "homepage"   : "http://routes.upstatement.com",
+    "homepage"   : "",
     "license"    : "MIT",
     "authors"    : [
+        {
+            "name"    : "Mohamed Amin",
+            "email"   : "devaly.dev99@gmail.com",
+        },
         {
             "name"    : "Jared Novack",
             "email"   : "jared@upstatement.com",
@@ -12,12 +16,12 @@
         }
     ],
     "support"    : {
-        "issues": "https://github.com/jarednova/routes/issues",
-        "wiki"  : "https://github.com/jarednova/routes/wiki",
-        "source": "https://github.com/jarednova/routes"
+        "issues": "https://github.com/medamine99/Wordpress-Routes/issues",
+        "wiki"  : "https://github.com/medamine99/Wordpress-Routes/wiki",
+        "source": "https://github.com/medamine99/Wordpress-Routes"
     },
     "require"    : {
-        "php"                       : ">=5.3.0",
+        "php"                       : ">=5.6.0",
         "altorouter/altorouter"		: "^1.1.0",
         "composer/installers"       : "~1.0"
     },
