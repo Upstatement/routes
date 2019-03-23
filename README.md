@@ -1,5 +1,5 @@
 # Routes
-Simple routing for WordPress. Designed for usage with [Timber](https://github.com/timber/timber)
+Simple routing for WordPress.
 
 [![Build Status](https://img.shields.io/travis/med-amin/wordpress-routes/master.svg?style=flat-square)](https://travis-ci.org/med-amin/wordpress-routes)
 [![Coverage Status](https://img.shields.io/coveralls/med-amin/wordpress-routes.svg?style=flat-square)](https://coveralls.io/r/med-amin/wordpress-routes?branch=master)

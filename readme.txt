@@ -1,5 +1,5 @@
 === Routes ===
-Contributors: jarednova
+Contributors: jarednova + Mohamed Amin
 Tags: admin, configuration
 Requires at least: 4.0
 Stable tag: 0.3.1
@@ -8,12 +8,12 @@ PHP version: 5.3.0 or greater
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Simple ways to add HTTP routes to your WordPress Theme
+Simple ways to add HTTP routes to your WordPress Theme or plugin
 
 == Description ==
 Simple ways to make admin customizations for WordPress. You know all that brain space you saved for rewrite regex? Now you can simply...
 
-* On [GitHub](https://github.com/upstatement/routes)
+* On [GitHub](https://github.com/med-amin/wordpress-routes)
 
 ### Usage
 <code><pre>
@@ -34,4 +34,4 @@ Routes::map('my-events/:event', function($params) {
 
 == Support ==
 
-Please use the [GitHub repo](https://github.com/upstatement/routes/issues?state=open) to file bugs or questions.
+Please use the [GitHub repo](https://github.com/med-amin/wordpress-routes/issues?state=open) to file bugs or questions.
