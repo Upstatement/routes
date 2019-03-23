@@ -1,5 +1,5 @@
 {
-    "name"       : "medamine99/wordpress-routes",
+    "name"       : "med-amin/wordpress-routes",
     "description": "Manage rewrites and routes in WordPress with this dead-simple plugin",
     "keywords"   : ["routes", "routing", "rewrite", "redirects"],
     "homepage"   : "",
@@ -19,9 +19,9 @@
        
     ],
     "support"    : {
-        "issues": "https://github.com/medamine99/wordpress-routes/issues",
-        "wiki"  : "https://github.com/medamine99/wordpress-routes/wiki",
-        "source": "https://github.com/medamine99/wordpress-routes"
+        "issues": "https://github.com/med-amin/wordpress-routes/issues",
+        "wiki"  : "https://github.com/med-amin/wordpress-routes/wiki",
+        "source": "https://github.com/med-amin/wordpress-routes"
     },
     "require"    : {
         "php"                       : ">=5.6.0",
