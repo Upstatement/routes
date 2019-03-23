@@ -1,9 +1,9 @@
 # Routes
 Simple routing for WordPress. Designed for usage with [Timber](https://github.com/timber/timber)
 
-[![Build Status](https://img.shields.io/travis/Upstatement/routes/master.svg?style=flat-square)](https://travis-ci.org/Upstatement/routes)
-[![Coverage Status](https://img.shields.io/coveralls/Upstatement/routes.svg?style=flat-square)](https://coveralls.io/r/Upstatement/routes?branch=master)
-[![Packagist Downloads](https://img.shields.io/packagist/dt/Upstatement/routes.svg?style=flat-square)]()
+[![Build Status](https://img.shields.io/travis/medamine99/wordpress-routes/master.svg?style=flat-square)](https://travis-ci.org/Upstatement/routes)
+[![Coverage Status](https://img.shields.io/coveralls/medamine99/wordpress-routes.svg?style=flat-square)](https://coveralls.io/r/Upstatement/routes?branch=master)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/medamine99/wordpress-routes.svg?style=flat-square)]()
 
 
 ### Basic Usage
