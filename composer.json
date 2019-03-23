@@ -6,14 +6,16 @@
     "license"    : "MIT",
     "authors"    : [
          {
+            "name"    : "Mohamed Amin",
+            "email"   : "devaly.dev99@gmail.com"
+        },
+
+         {
             "name"    : "Jared Novack",
             "email"   : "jared@upstatement.com",
             "homepage": "http://upstatement.com"
-        },
-        {
-            "name"    : "Mohamed Amin",
-            "email"   : "devaly.dev99@gmail.com"
         }
+       
        
     ],
     "support"    : {
