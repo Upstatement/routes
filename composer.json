@@ -5,15 +5,11 @@
     "homepage"   : "",
     "license"    : "MIT",
     "authors"    : [
+     
          {
             "name"    : "Mohamed Amin",
-            "email"   : "devaly.dev99@gmail.com"
-        },
-
-         {
-            "name"    : "Jared Novack",
-            "email"   : "jared@upstatement.com",
-            "homepage": "http://upstatement.com"
+            "email"   : "devaly.dev99@gmail.com",
+            "homepage": "https://github.com/med-amin"
         }
        
        
