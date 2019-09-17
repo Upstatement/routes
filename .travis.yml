@@ -18,10 +18,11 @@ env:
 before_script:
     - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
     - composer install --dev
+    - curl -sSfL -o ~/.phpenv/versions/7.3/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar
 
 script:
     - mkdir -p build/logs
-    - vendor/phpunit/phpunit/phpunit/composer/bin/phpunit --coverage-clover build/logs/clover.xml
+    - phpunit --coverage-clover build/logs/clover.xml
 
 after_script:
     - php vendor/bin/coveralls -v
