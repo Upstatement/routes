@@ -63,6 +63,8 @@ class Routes {
 			} else {
 				$base_path = '/' . $base_path . '/';
 			}
+			// Clean any double slashes that have resulted
+			$base_path = str_replace( "//", "/", $base_path );
 			$upstatement_routes->router->setBasePath($base_path);
 		}
 		$route = self::convert_route($route);
