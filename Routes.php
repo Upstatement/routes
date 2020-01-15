@@ -126,8 +126,8 @@ class Routes {
 				add_action('template_redirect', function(){
 					global $wp_query;
 					$wp_query->is_404 = false;
-					$query->is_attachment = false;
-					$query->is_page = true;
+					$wp_query->is_attachment = false;
+					$wp_query->is_page = true;
 				},1);
 			}
 		}
