@@ -3,7 +3,7 @@
 class TestRoutes extends WP_UnitTestCase {
 
 	function testThemeRoute(){
-		$template = Routes::load('single.php');
+		$template = Routes::load(__DIR__.'/single.php');
 		$this->assertTrue($template);
 	}
 
@@ -225,7 +225,7 @@ class TestRoutes extends WP_UnitTestCase {
 	}
 
 	function testRouteWithClassCallback() {
-		Routes::map('classroute', array('TestRoutes', 'testCallback'));
+		Routes::map('classroute', array('TestRoutes', '_testCallback'));
 		$this->go_to(home_url('classroute'));
 		$this->matchRoutes();
 		global $matches;
@@ -237,7 +237,7 @@ class TestRoutes extends WP_UnitTestCase {
 		$upstatement_routes->match_current_request();
 	}
 
-	static function testCallback() {
+	static function _testCallback() {
 		global $matches;
 		$matches[] = true;
 	}
