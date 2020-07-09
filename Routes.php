@@ -32,11 +32,13 @@ class Routes {
 			unset($upstatement_routes->router);
 			
 			if ($route && isset($route['target'])) {
+				do_action('timber/router/before-route', $route);
 				if ( isset($route['params']) ) {
 					call_user_func($route['target'], $route['params']);
 				} else {
 					call_user_func($route['target']);
 				}
+				do_action('timber/router/after-route', $route);
 			}
 		}
 	}
