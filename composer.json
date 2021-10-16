@@ -7,23 +7,23 @@
         "rewrite",
         "redirects"
     ],
-    "homepage": "http://routes.upstatement.com",
+    "homepage": "https://www.upstatement.com",
     "license": "MIT",
     "authors": [
         {
             "name": "Jared Novack",
             "email": "jared@upstatement.com",
-            "homepage": "http://upstatement.com"
+            "homepage": "https://www.upstatement.com"
         }
     ],
     "support": {
-        "issues": "https://github.com/jarednova/routes/issues",
-        "wiki": "https://github.com/jarednova/routes/wiki",
-        "source": "https://github.com/jarednova/routes"
+        "issues": "https://github.com/Upstatement/routes/issues",
+        "wiki": "https://github.com/Upstatement/routes/wiki",
+        "source": "https://github.com/Upstatement/routes"
     },
     "require": {
         "php": ">=5.6.0",
-        "altorouter/altorouter": "^2.0.2",
+        "altorouter/altorouter": "^2.0",
         "composer/installers": "~1.0"
     },
     "require-dev": {
