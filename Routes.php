@@ -131,7 +131,7 @@ class Routes {
 		}
 
 		if ($query) {
-			add_action('do_parse_request', function() use ($query) {
+			add_action('parse_request', function() use ($query) {
 				global $wp;
 				if ( is_callable($query) )
 					$query = call_user_func($query);
