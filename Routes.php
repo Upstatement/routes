@@ -50,7 +50,7 @@ class Routes {
 	 *                                  //stuff goes here
 	 *                              });
 	 */
-	public static function map($route, $callback, $args = array()) {
+	public static function map($route, $callback, $name = '') {
 		global $upstatement_routes;
 		if (!isset($upstatement_routes->router)) {
 			$upstatement_routes->router = new AltoRouter();
@@ -68,8 +68,8 @@ class Routes {
 			$upstatement_routes->router->setBasePath($base_path);
 		}
 		$route = self::convert_route($route);
-		$upstatement_routes->router->map('GET|POST|PUT|DELETE', trailingslashit($route), $callback);
-		$upstatement_routes->router->map('GET|POST|PUT|DELETE', untrailingslashit($route), $callback);
+		$upstatement_routes->router->map('GET|POST|PUT|DELETE', trailingslashit($route), $callback, $name);
+		$upstatement_routes->router->map('GET|POST|PUT|DELETE', untrailingslashit($route), $callback, $name);
 	}
 
 	/**
