@@ -4,7 +4,7 @@ Plugin Name: Routes
 Plugin URI: http://www.upstatement.com
 Description: Routes makes it easy to add custom routing to your WordPress site. That's why we call it Routes. That is all.
 Author: Jared Novack + Upstatement
-Version: 0.8.1
+Version: 0.9.2
 Author URI: http://upstatement.com/
 
 Usage:
