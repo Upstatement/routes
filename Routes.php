@@ -68,8 +68,8 @@ class Routes {
 			$upstatement_routes->router->setBasePath($base_path);
 		}
 		$route = self::convert_route($route);
-		$upstatement_routes->router->map('GET|POST|PUT|DELETE', trailingslashit($route), $callback, $name);
-		$upstatement_routes->router->map('GET|POST|PUT|DELETE', untrailingslashit($route), $callback, $name);
+		$upstatement_routes->router->map('GET|POST|PUT|DELETE|HEAD', trailingslashit($route), $callback, $name);
+		$upstatement_routes->router->map('GET|POST|PUT|DELETE|HEAD', untrailingslashit($route), $callback, $name);
 	}
 
 	/**
