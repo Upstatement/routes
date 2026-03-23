@@ -1,12 +1,12 @@
 # Routes
+
 Simple routing for WordPress. Designed for usage with [Timber](https://github.com/timber/timber)
 
-[![Build Status](https://img.shields.io/travis/Upstatement/routes/master.svg?style=flat-square)](https://travis-ci.org/Upstatement/routes)
-[![Coverage Status](https://img.shields.io/coveralls/Upstatement/routes.svg?style=flat-square)](https://coveralls.io/r/Upstatement/routes?branch=master)
-[![Packagist Downloads](https://img.shields.io/packagist/dt/Upstatement/routes.svg?style=flat-square)]()
-
+[![PHP unit tests](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml/badge.svg?branch=2.x)](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml?query=branch:2.x)
+[![Latest Stable Version](https://img.shields.io/packagist/v/Upstatement/routes.svg?style=flat-square)](https://packagist.org/packages/Upstatement/routes)
 
 ### Basic Usage
+
 ```php
 /* functions.php */
 Routes::map('myfoo/bar', 'my_callback_function');
@@ -21,6 +21,7 @@ Routes::map('my-events/:event', function($params) {
 Using routes makes it easy for you to implement custom pagination — and anything else you might imagine in your wildest dreams of URLs and parameters. OMG so easy!
 
 ## Some examples
+
 In your functions.php file, this can be called anywhere (don't hook it to init or another action or it might be called too late)
 
 ```php
@@ -77,12 +78,13 @@ my-users/:userid/edit
 A function that should fire when the pattern matches the request. Callback takes one argument which is an array of the parameters passed in the URL.
 
 So in this example: `'info/:name/page/:pg'`, $params would have data for:
-* `$data['name']`
-* `$data['pg']`
+
+- `$data['name']`
+- `$data['pg']`
 
 ... which you can use in the callback function as a part of your query
 
-* * *
+---
 
 ## load
 
