@@ -19,14 +19,14 @@
 class Routes
 {
     /**
-     * The AltoRouter instance used to match the current request to the defined routes.
-     */
-    protected ?AltoRouter $router = null;
-
-    /**
      * The singleton instance of the Routes class.
      */
     private static ?self $instance = null;
+
+    /**
+     * The AltoRouter instance used to match the current request to the defined routes.
+     */
+    protected ?AltoRouter $router = null;
 
     /**
      * Private constructor to enforce the singleton pattern.
