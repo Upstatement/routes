@@ -35,48 +35,11 @@ function cache_sqlite_develop(string $cacheDir): void
 	shell_exec('rm -rf ' . escapeshellarg("$cacheDir/tmp.zip") . ' ' . escapeshellarg("$cacheDir/sqlite-database-integration-main"));
 }
 
-/**
- * Parse TIMBER_TEST_PLUGINS environment variable.
- *
- * @return array List of plugins to activate (e.g., ['acf', 'coauthors-plus', 'wpml'])
- */
-function timber_get_test_plugins(): array
-{
-	$plugins = getenv('TIMBER_TEST_PLUGINS');
-	if (empty($plugins)) {
-		return [];
-	}
-	return array_filter(array_map(trim(...), explode(',', $plugins)));
-}
-
-/**
- * Check if a specific plugin should be activated for this test run.
- */
-function timber_test_has_plugin(string $plugin): bool
-{
-	return in_array($plugin, timber_get_test_plugins(), true);
-}
-
-/**
- * Map plugin shortnames to their main file path (relative to wp-content/plugins/).
- */
-function timber_get_plugin_map(): array
-{
-	return [
-		'acf' => 'advanced-custom-fields/acf.php',
-		'coauthors-plus' => 'co-authors-plus/co-authors-plus.php',
-	];
-}
-
-
-
-
 // Load test helper classes (global namespace)
 foreach (glob(__DIR__ . '/Support/*.php') as $file) {
 
 	require_once $file;
 }
-
 
 $manager = manager();
 
