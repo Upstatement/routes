@@ -12,7 +12,7 @@
 
 # Packages
 vendor
-
+composer.lock
 # Application
 build
 /cache
