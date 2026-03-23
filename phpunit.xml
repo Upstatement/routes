@@ -1,19 +1,23 @@
+<?xml version="1.0"?>
 <phpunit
-	bootstrap="tests/bootstrap.php"
-	backupGlobals="false"
-	colors="true"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+    bootstrap="./tests/bootstrap.php"
+    colors="true"
+    backupGlobals="false"
+    stopOnFailure="false"
+    failOnWarning="true"
+    failOnDeprecation="true"
+    executionOrder="random"
+    cacheDirectory=".phpunit.cache"
 	>
-	<testsuites>
-		<testsuite>
-			<directory prefix="test-" suffix=".php">./tests/</directory>
-		</testsuite>
-	</testsuites>
-	<filter>
-    	<whitelist processUncoveredFilesFromWhitelist="true">
-    		<file>Routes.php</file>
-  		</whitelist>
-	</filter>
+    <testsuites>
+        <testsuite name="default">
+            <directory suffix="Test.php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <source ignoreIndirectDeprecations="true">
+        <include>
+            <file>./src/Routes.php</file>
+        </include>
+    </source>
 </phpunit>
