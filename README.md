@@ -127,7 +127,7 @@ The query you want to use, it can accept a string or array just like `Timber::ge
 Send an optional status code. Defaults to 200 for 'Success/OK'
 
 ## addMatchTypes
-This method makes it possbile to add custom matchtypes in Routes.
+This method makes it possbile to add custom match types in Routes.
 
 ```php
 <?php
