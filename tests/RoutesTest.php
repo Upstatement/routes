@@ -301,7 +301,6 @@ class RoutesTest extends Integration_Test_Case
 		$this->get(home_url('classroute'));
 		$this->matchRoutes();
 		global $matches_class_test;
-		$matches_class_test = [];
 		$this->assertEquals(1, count($matches_class_test));
 	}
 
@@ -314,6 +313,7 @@ class RoutesTest extends Integration_Test_Case
 	static function _testCallback()
 	{
 		global $matches_class_test;
+		$matches_class_test = [];
 		$matches_class_test[] = true;
 	}
 }
