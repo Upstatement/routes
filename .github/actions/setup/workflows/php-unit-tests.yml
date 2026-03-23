@@ -1,0 +1,114 @@
+name: PHP unit tests
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "**workflows/php-unit-tests.yml"
+      - "**.php"
+      - "**composer.*"
+      - "**phpunit.xml"
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "**workflows/php-unit-tests.yml"
+      - "**.php"
+      - "**composer.*"
+      - "**phpunit.xml"
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =============================================================================
+  # Detect PHP versions from composer.json
+  # =============================================================================
+  php-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: versions
+        uses: WyriHaximus/github-action-composer-php-versions-in-range@v1
+        with:
+          upcomingReleases: true
+
+  # =============================================================================
+  # Compatibility tests: PHP versions x WP versions
+  # =============================================================================
+  php-unit-tests:
+    needs: php-versions
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ${{ fromJson(needs.php-versions.outputs.versions) }}
+        wp: ["latest"]
+        dependency-version: ["highest", "lowest"]
+        experimental: [false]
+        coverage: [false]
+        include:
+          # Oldest supported WP with lowest deps
+          - php: "8.2"
+            wp: "6.3"
+            dependency-version: "lowest"
+            experimental: false
+            coverage: false
+          # Coverage: PHP 8.2, WP latest, highest deps
+          - php: "8.2"
+            wp: "latest"
+            dependency-version: "highest"
+            experimental: false
+            coverage: true
+          # Trunk (experimental)
+          - php: "8.5"
+            wp: "trunk"
+            dependency-version: "highest"
+            experimental: true
+            coverage: false
+
+    name: PHP ${{ matrix.php }} | WP ${{ matrix.wp }} | ${{ matrix.dependency-version }}${{ matrix.coverage && ' | coverage' || '' }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: ${{ matrix.coverage && 'pcov' || 'none' }}
+          tools: composer:v2
+          extensions: curl, date, dom, iconv, json, libxml, gd, sqlite3
+          ini-values: ${{ matrix.coverage && 'pcov.directory=src' || '' }}
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: ${{ matrix.dependency-version }}
+
+      # PHP 8.5: Collision and curl have deprecations we can't fix
+      - name: Disable failOnDeprecation for PHP 8.5
+        if: matrix.experimental
+        run: sed -i 's/failOnDeprecation="true"/failOnDeprecation="false"/' phpunit.xml
+
+      - name: Create coverage directory
+        if: matrix.coverage
+        run: mkdir -p build/logs
+
+      - name: Run default testsuite
+        run: composer test ${{ matrix.coverage && '-- --coverage-php build/coverage-default.cov' || '' }}
+        env:
+          WP_VERSION: ${{ matrix.wp }}
