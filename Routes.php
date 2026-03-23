@@ -67,13 +67,7 @@ class Routes
         $site_url_parts = explode('/', $site_url);
         $site_url_parts = array_slice($site_url_parts, 3);
         $base_path = implode('/', $site_url_parts);
-        if (!$base_path) {
-            $base_path = '/';
-        } else {
-            $base_path = '/' . $base_path . '/';
-        }
-        // Clean any double slashes that have resulted
-        $base_path = str_replace('//', '/', $base_path);
+        $base_path = $base_path ? '/' . trim($base_path, '/') . '/' : '/';
         $this->router->setBasePath($base_path);
     }
 
@@ -85,18 +79,15 @@ class Routes
      */
     public function match_current_request()
     {
-        if (null !== $this->router) {
-            $route = $this->router->match();
+        if (null == $this->router) {
+            return;
+        }
 
-            $this->router = null;
+        $route = $this->router->match();
+        $this->router = null;
 
-            if ($route && isset($route['target'])) {
-                if (isset($route['params'])) {
-                    call_user_func($route['target'], $route['params']);
-                } else {
-                    call_user_func($route['target']);
-                }
-            }
+        if ($route && isset($route['target'])) {
+            call_user_func($route['target'], ...array_filter([$route['params'] ?? null]));
         }
     }
 
