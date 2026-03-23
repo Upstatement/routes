@@ -121,7 +121,7 @@ class Routes
      */
     public static function convert_route($route_string)
     {
-        if (strpos($route_string, '[') > -1) {
+        if (strpos($route_string, '[') !== false) {
             return $route_string;
         }
         $route_string = preg_replace('/(:)\w+/', '/[$0]', $route_string);
