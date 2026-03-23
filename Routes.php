@@ -76,7 +76,7 @@ class Routes {
 	 * Wrapper for AltoRouter's addMatchTypes function. See AltoRouter documentation for more details.
 	 * 
 	 * @api
-	 * @link https://dannyvankooten.github.io/AltoRouter//usage/mapping-routes.html
+	 * @link https://dannyvankooten.github.io/AltoRouter/usage/mapping-routes.html
 	 * 
 	 * @param array $match_types An array of custom match types to add to AltoRouter.
 	 *                           Keys are type names and values are regex patterns.
