@@ -214,7 +214,7 @@ class Routes
         if ($template) {
             add_filter(
                 'template_include',
-                fn() => $template,
+                fn($current_template) => $template,
                 $priority
             );
             return true;
