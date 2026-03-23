@@ -140,12 +140,11 @@ class Routes
      * to load a specific template file when a route is matched, and to send data to that template file.
      *
      * @api
-     * @param string     $template           A php file to load (ex: 'single.php').
-     * @param array|bool $tparams       An array of data to send to the php file. Inside the php file this data can be accessed via: `global $params;`.
-
-     * @param WP_Query   $query           Use a WP_Query object in the template file instead of the default query.
-     * @param int        $status_code     A code for the status (ex: 200).
-     * @param int        $priority        The priority used by the "template_include" filter.
+     * @param string                         $template        A php file to load (ex: 'single.php').
+     * @param array|bool                     $tparams         An array of data to send to the php file. Inside the php file this data can be accessed via: `global $params;`.
+     * @param WP_Query|callable|array|string $query           A WP_Query object, a callable that returns a WP_Query object, an array of query vars, or a query string. This will be used to set the main query for the request, which can be accessed with the global $wp_query variable in the template file. If a callable is passed, it will be called at the time of the 'parse_request' action, and should return a WP_Query object.
+     * @param int                            $status_code     A code for the status (ex: 200).
+     * @param int                            $priority        The priority used by the "template_include" filter.
      * @return bool
      */
     public static function load($template, $tparams = false, $query = false, $status_code = 200, $priority = 10)
