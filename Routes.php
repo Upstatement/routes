@@ -36,8 +36,8 @@ class Routes
      */
     public function __construct()
     {
-        add_action('init', [$this, 'match_current_request']);
-        add_action('wp_loaded', [$this, 'match_current_request']);
+        add_action('init', [self::class, 'match_current_request']);
+        add_action('wp_loaded', [self::class, 'match_current_request']);
     }
 
     /**
