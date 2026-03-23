@@ -257,7 +257,7 @@ class RoutesTest extends Integration_Test_Case
 		$this->assertEquals(1, count($matches));
 	}
 
-	function testVerySimpleRoutePreceedingSlash()
+	function testVerySimpleRoutePrecedingSlash()
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
