@@ -93,7 +93,7 @@ class Routes
             $site_url_parts = explode('/', $site_url);
             $site_url_parts = array_slice($site_url_parts, 3);
             $base_path = implode('/', $site_url_parts);
-            if (!$base_path || strpos($route, $base_path) === 0) {
+            if (!$base_path || str_starts_with($route, $base_path)) {
                 $base_path = '/';
             } else {
                 $base_path = '/' . $base_path . '/';
@@ -129,7 +129,7 @@ class Routes
         $route_string = str_replace(']]', ']', $route_string);
         $route_string = str_replace('[/:', '[:', $route_string);
         $route_string = str_replace('//[', '/[', $route_string);
-        if (strpos($route_string, '/') === 0) {
+        if (str_starts_with($route_string, '/')) {
             $route_string = substr($route_string, 1);
         }
         return $route_string;
@@ -202,7 +202,7 @@ class Routes
                     if (is_array($query)) {
                         $wp->query_vars = $query;
                     } elseif (!empty($query)) {
-                        parse_str($query, $wp->query_vars);
+                        parse_str((string) $query, $wp->query_vars);
                     } else {
                         return true; // Could not interpret query. Let WP try.
                     }
@@ -214,9 +214,7 @@ class Routes
         if ($template) {
             add_filter(
                 'template_include',
-                function () use ($template) {
-                    return $template;
-                },
+                fn() => $template,
                 $priority
             );
             return true;
