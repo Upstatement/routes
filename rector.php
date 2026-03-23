@@ -8,17 +8,23 @@ use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 
 return RectorConfig::configure()
-   ->withPaths([
-      __DIR__ . '/Routes.php',
-   ])
-   ->withPhpSets(
-      php82: true,
-   )
-   ->withSets([
-      PHPUnitSetList::PHPUNIT_100,
-      PHPUnitSetList::PHPUNIT_110,
-   ])
-   ->withSkip([
-      ArrayToFirstClassCallableRector::class,
-      StringableForToStringRector::class,
-   ]);
+	->withPaths(
+		[
+			__DIR__ . '/Routes.php',
+		]
+	)
+	->withPhpSets(
+		php82: true,
+	)
+	->withSets(
+		[
+			PHPUnitSetList::PHPUNIT_100,
+			PHPUnitSetList::PHPUNIT_110,
+		]
+	)
+	->withSkip(
+		[
+			ArrayToFirstClassCallableRector::class,
+			StringableForToStringRector::class,
+		]
+	);

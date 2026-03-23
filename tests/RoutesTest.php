@@ -40,14 +40,17 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('foo', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$phpunit->assertTrue(true);
-			$matches[] = true;
-		});
+		Routes::map(
+			'foo',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$phpunit->assertTrue(true);
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('foo'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -56,17 +59,25 @@ class RoutesTest extends Integration_Test_Case
 	function testRouteWithVariable()
 	{
 		$post_name = 'ziggy';
-		$post = $this->factory->post->create(array('post_title' => 'Ziggy', 'post_name' => $post_name));
+		$post = $this->factory->post->create(
+			[
+				'post_title' => 'Ziggy',
+				'post_name' => $post_name,
+			]
+		);
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('mything/:slug', function ($params) use ($phpunit) {
-			global $matches;
-			$matches = array();
-			if ('ziggy' == $params['slug']) {
-				$matches[] = true;
+		Routes::map(
+			'mything/:slug',
+			function ($params) use ($phpunit) {
+				global $matches;
+				$matches = [];
+				if ('ziggy' == $params['slug']) {
+					$matches[] = true;
+				}
 			}
-		});
+		);
 		$this->get(home_url('/mything/' . $post_name));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -75,17 +86,25 @@ class RoutesTest extends Integration_Test_Case
 	function testRouteWithAltoVariable()
 	{
 		$post_name = 'ziggy';
-		$post = $this->factory->post->create(array('post_title' => 'Ziggy', 'post_name' => $post_name));
+		$post = $this->factory->post->create(
+			[
+				'post_title' => 'Ziggy',
+				'post_name' => $post_name,
+			]
+		);
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('mything/[*:slug]', function ($params) use ($phpunit) {
-			global $matches;
-			$matches = array();
-			if ('ziggy' == $params['slug']) {
-				$matches[] = true;
+		Routes::map(
+			'mything/[*:slug]',
+			function ($params) use ($phpunit) {
+				global $matches;
+				$matches = [];
+				if ('ziggy' == $params['slug']) {
+					$matches[] = true;
+				}
 			}
-		});
+		);
 		$this->get(home_url('/mything/' . $post_name));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -94,16 +113,19 @@ class RoutesTest extends Integration_Test_Case
 	function testRouteWithMultiArguments()
 	{
 		$phpunit = $this;
-		Routes::map('artist/[:artist]/song/[:song]', function ($params) use ($phpunit) {
-			global $matches;
-			$matches = array();
-			if ($params['artist'] == 'smashing-pumpkins') {
-				$matches[] = true;
+		Routes::map(
+			'artist/[:artist]/song/[:song]',
+			function ($params) use ($phpunit) {
+				global $matches;
+				$matches = [];
+				if ($params['artist'] == 'smashing-pumpkins') {
+					$matches[] = true;
+				}
+				if ($params['song'] == 'mayonaise') {
+					$matches[] = true;
+				}
 			}
-			if ($params['song'] == 'mayonaise') {
-				$matches[] = true;
-			}
-		});
+		);
 		$this->get(home_url('/artist/smashing-pumpkins/song/mayonaise'));
 		$this->matchRoutes();
 		global $matches;
@@ -114,16 +136,19 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$phpunit = $this;
 		global $matches;
-		Routes::map('studio/:studio/movie/:movie', function ($params) use ($phpunit) {
-			global $matches;
-			$matches = array();
-			if ($params['studio'] == 'universal') {
-				$matches[] = true;
+		Routes::map(
+			'studio/:studio/movie/:movie',
+			function ($params) use ($phpunit) {
+				global $matches;
+				$matches = [];
+				if ($params['studio'] == 'universal') {
+					$matches[] = true;
+				}
+				if ($params['movie'] == 'brazil') {
+					$matches[] = true;
+				}
 			}
-			if ($params['movie'] == 'brazil') {
-				$matches[] = true;
-			}
-		});
+		);
 		$this->get(home_url('/studio/universal/movie/brazil/'));
 		$this->matchRoutes();
 		$this->assertEquals(2, count($matches));
@@ -132,16 +157,24 @@ class RoutesTest extends Integration_Test_Case
 	function testRouteAgainstPostName()
 	{
 		$post_name = 'jared';
-		$post = $this->factory->post->create(array('post_title' => 'Jared', 'post_name' => $post_name));
+		$post = $this->factory->post->create(
+			[
+				'post_title' => 'Jared',
+				'post_name' => $post_name,
+			]
+		);
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('randomthing/' . $post_name, function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$phpunit->assertTrue(true);
-			$matches[] = true;
-		});
+		Routes::map(
+			'randomthing/' . $post_name,
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$phpunit->assertTrue(true);
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('/randomthing/' . $post_name));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -151,13 +184,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('crackers', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$matches[] = true;
-		});
+		Routes::map(
+			'crackers',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('crackers'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -167,13 +203,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('bip/', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$matches[] = true;
-		});
+		Routes::map(
+			'bip/',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('bip'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -183,13 +222,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('bopp', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$matches[] = true;
-		});
+		Routes::map(
+			'bopp',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('bopp/'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -200,13 +242,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('zappers', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$matches[] = true;
-		});
+		Routes::map(
+			'zappers',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('zappers/'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -216,13 +261,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('/gobbles', function () use ($phpunit) {
-			global $matches;
-			$matches = array();
-			$matches[] = true;
-		});
+		Routes::map(
+			'/gobbles',
+			function () use ($phpunit) {
+				global $matches;
+				$matches = [];
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('gobbles'));
 		$this->matchRoutes();
 		$this->assertEquals(1, count($matches));
@@ -232,13 +280,16 @@ class RoutesTest extends Integration_Test_Case
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
-		$matches = array();
+		$matches = [];
 		$phpunit = $this;
-		Routes::map('foo', function () use ($phpunit) {
-			$matches = array();
-			$phpunit->assertTrue(false);
-			$matches[] = true;
-		});
+		Routes::map(
+			'foo',
+			function () use ($phpunit) {
+				$matches = [];
+				$phpunit->assertTrue(false);
+				$matches[] = true;
+			}
+		);
 		$this->get(home_url('bar'));
 		$this->matchRoutes();
 		$this->assertEquals(0, count($matches));
@@ -246,7 +297,7 @@ class RoutesTest extends Integration_Test_Case
 
 	function testRouteWithClassCallback()
 	{
-		Routes::map('classroute', array('RoutesTest', '_testCallback'));
+		Routes::map('classroute', ['RoutesTest', '_testCallback']);
 		$this->get(home_url('classroute'));
 		$this->matchRoutes();
 		global $matches_class_test;

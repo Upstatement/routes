@@ -28,11 +28,11 @@ function cache_sqlite_develop(string $cacheDir): void
 
 	// Download develop branch, extract, rename folder, re-zip with correct name
 	$url = 'https://github.com/WordPress/sqlite-database-integration/archive/refs/heads/develop.zip';
-	shell_exec("curl -sL " . escapeshellarg($url) . " -o " . escapeshellarg("$cacheDir/tmp.zip"));
-	shell_exec("unzip -q " . escapeshellarg("$cacheDir/tmp.zip") . " -d " . escapeshellarg($cacheDir));
+	shell_exec('curl -sL ' . escapeshellarg($url) . ' -o ' . escapeshellarg("$cacheDir/tmp.zip"));
+	shell_exec('unzip -q ' . escapeshellarg("$cacheDir/tmp.zip") . ' -d ' . escapeshellarg($cacheDir));
 	rename("$cacheDir/sqlite-database-integration-develop", "$cacheDir/sqlite-database-integration-main");
-	shell_exec("cd " . escapeshellarg($cacheDir) . " && zip -rq sqlite-database-integration-main.zip sqlite-database-integration-main");
-	shell_exec("rm -rf " . escapeshellarg("$cacheDir/tmp.zip") . " " . escapeshellarg("$cacheDir/sqlite-database-integration-main"));
+	shell_exec('cd ' . escapeshellarg($cacheDir) . ' && zip -rq sqlite-database-integration-main.zip sqlite-database-integration-main');
+	shell_exec('rm -rf ' . escapeshellarg("$cacheDir/tmp.zip") . ' ' . escapeshellarg("$cacheDir/sqlite-database-integration-main"));
 }
 
 /**
