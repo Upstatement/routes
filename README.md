@@ -2,7 +2,7 @@
 
 Simple routing for WordPress. Designed for usage with [Timber](https://github.com/timber/timber)
 
-[![PHP unit tests](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml/badge.svg?branch=2.x)](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml?query=branch:2.x)
+[![PHP unit tests](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml/badge.svg?branch=master)](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml?query=branch:master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Upstatement/routes.svg?style=flat-square)](https://packagist.org/packages/Upstatement/routes)
 
 ### Basic Usage
