@@ -17,7 +17,7 @@
     </testsuites>
     <source ignoreIndirectDeprecations="true">
         <include>
-            <file>./src/Routes.php</file>
+            <file>./Routes.php</file>
         </include>
     </source>
 </phpunit>
