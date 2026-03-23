@@ -9,3 +9,5 @@
 /phpunit.xml export-ignore
 /README.md export-ignore
 /readme.txt export-ignore
+/.ecs.php export-ignore
+/rector.php export-ignore
