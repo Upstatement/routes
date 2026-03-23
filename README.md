@@ -21,6 +21,56 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 If you're using a WordPress-specific Composer setup (e.g. [Bedrock](https://roots.io/bedrock/)), the autoloader is usually already loaded for you.
 
+## Upgrading to 1.x
+
+Version 1.0 introduces several breaking changes. If you're upgrading from 0.x, read through the following sections to make sure your code is compatible.
+
+### PHP 8.2+ required
+
+Routes now requires PHP 8.2 or higher.
+
+### Singleton — no direct instantiation
+
+The class is now a singleton. You can no longer instantiate it directly:
+
+```php
+// Before (0.x) — no longer works
+$routes = new Routes();
+
+// After (1.x)
+$instance = Routes::get_instance();
+```
+
+In practice most applications never instantiated `Routes` directly, so this is unlikely to affect you.
+
+### No more global `$upstatement_routes`
+
+The global variable `$upstatement_routes` used internally in 0.x has been removed. If your code accessed called `$upstatement_routes->match_current_request()` directly, update it:
+
+```php
+// Before (0.x)
+global $upstatement_routes;
+$upstatement_routes->match_current_request();
+
+// After (1.x)
+Routes::get_instance()->match_current_request();
+```
+
+### New `add_match_types()` method
+
+Custom AltoRouter match types can now be registered via `Routes::add_match_types()` and may be called before or after `Routes::map()`:
+
+```php
+Routes::add_match_types(['hex' => '[0-9A-Fa-f]+']);
+Routes::map('color/[hex:color]', function($params) {
+    // $params['color'] is guaranteed to be a hex string
+});
+```
+
+### Class is no longer auto-instantiated on include
+
+In 0.x, including `Routes.php` immediately instantiated the class and registered WordPress hooks. In 1.x, the singleton is created lazily on the first call to `Routes::map()` or `Routes::add_match_types()`. No action is required as long as you call `Routes::map()` before `wp_loaded` fires, which is the standard usage pattern.
+
 ### Basic Usage
 
 ```php
