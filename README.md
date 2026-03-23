@@ -125,3 +125,26 @@ The query you want to use, it can accept a string or array just like `Timber::ge
 
 `$status_code`
 Send an optional status code. Defaults to 200 for 'Success/OK'
+
+## addMatchTypes
+This method makes it possbile to add custom matchtypes in Routes.
+
+```php
+<?php
+/* functions.php */
+
+Routes::addMatchTypes([
+	'oldID' => '@[0-9]++',
+]);
+
+Routes::map(
+	'[oldID:id]/[:slug]',
+	function ($params) {
+		$old_id = $params['id'];
+		$slug = $params['slug'];
+
+		/* the rest as normal... */
+		Timber::render('single.php', $context);	
+	}
+);
+```
