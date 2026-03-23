@@ -1,16 +1,8 @@
 <?php
 
 /**
- * Plugin Name:                 Routes
- * Plugin URI:                  http://www.upstatement.com
- * Description:                 Routes makes it easy to add custom routing to your WordPress site. That's why we call it Routes. That is all.
- * Author:                      Jared Novack + Upstatement
- * Author URI:                  http://www.upstatement.com
- * Text Domain:                 routes
- * Version:                     0.9.2.
- */
-
-/**
+ * Routes makes it easy to add custom routing to your WordPress site. That's why we call it Routes. That is all.
+ * 
  * The Routes class is responsible for defining the routing functionality of the plugin.
  * It uses the AltoRouter library to match the current request to the defined routes,
  * and to call the appropriate callback function when a route is matched.
@@ -23,6 +15,10 @@ class Routes
      */
     private static ?self $instance = null;
 
+    /**
+     * The version of the library.
+     */
+    public static $version = '0.9.2'; // x-release-please-version
     /**
      * The AltoRouter instance used to match the current request to the defined routes.
      */
@@ -255,13 +251,4 @@ class Routes
 
         return false;
     }
-}
-
-Routes::get_instance();
-
-if (
-    file_exists($composer_autoload = __DIR__ . '/vendor/autoload.php')
-    || file_exists($composer_autoload = WP_CONTENT_DIR . '/vendor/autoload.php')
-) {
-    require_once $composer_autoload;
 }
