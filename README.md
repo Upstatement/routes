@@ -5,6 +5,22 @@ Simple routing for WordPress. Designed for usage with [Timber](https://github.co
 [![PHP unit tests](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml/badge.svg?branch=2.x)](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml?query=branch:2.x)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Upstatement/routes.svg?style=flat-square)](https://packagist.org/packages/Upstatement/routes)
 
+## Installation
+
+Install via [Composer](https://getcomposer.org/):
+
+```bash
+composer require upstatement/routes
+```
+
+Then make sure Composer's autoloader is included in your project. In a standard WordPress setup this is typically done in `functions.php` or your plugin's main file:
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+```
+
+If you're using a WordPress-specific Composer setup (e.g. [Bedrock](https://roots.io/bedrock/)), the autoloader is usually already loaded for you.
+
 ### Basic Usage
 
 ```php
