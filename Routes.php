@@ -73,6 +73,24 @@ class Routes {
 	}
 
 	/**
+	 * Wrapper for AltoRouter's addMatchTypes function. See AltoRouter documentation for more details.
+	 * 
+	 * @api
+	 * @link https://dannyvankooten.github.io/AltoRouter//usage/mapping-routes.html
+	 * 
+	 * @param array $match_types An array of custom match types to add to AltoRouter.
+	 *                           Keys are type names and values are regex patterns.
+	 *                           ex: Routes::addMatchTypes(['hex' => '[0-9A-Fa-f]+']);
+	 */
+	public static function addMatchTypes($match_types)
+	{
+		global $upstatement_routes;
+		if (isset($upstatement_routes->router)) {
+			$upstatement_routes->router->addMatchTypes($match_types);
+		}
+	}
+
+	/**
 	 * @return string 					A string in a format for AltoRouter
 	 *                       			ex: [:my_param]
 	 */
