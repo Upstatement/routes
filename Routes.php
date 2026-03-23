@@ -37,8 +37,8 @@ class Routes
      */
     private function __construct()
     {
-        add_action('init', [$this, 'match_current_request']);
-        add_action('wp_loaded', [$this, 'match_current_request']);
+        add_action('init', [self::class, 'match_current_request']);
+        add_action('wp_loaded', [self::class, 'match_current_request']);
     }
 
     /**
@@ -162,7 +162,7 @@ class Routes
      */
     public static function convert_route($route_string)
     {
-        if (strpos($route_string, '[') > -1) {
+        if (str_contains($route_string, '[')) {
             return $route_string;
         }
         $route_string = preg_replace('/(:)\w+/', '/[$0]', $route_string);
@@ -182,13 +182,11 @@ class Routes
      * to load a specific template file when a route is matched, and to send data to that template file.
      *
      * @api
-     *
-     * @param string     $template    A php file to load (ex: 'single.php').
-     * @param array|bool $tparams     An array of data to send to the php file. Inside the php file this data can be accessed via: `global $params;`.
-     * @param WP_Query   $query       use a WP_Query object in the template file instead of the default query
-     * @param int        $status_code a code for the status (ex: 200)
-     * @param int        $priority    the priority used by the "template_include" filter
-     *
+     * @param string                         $template        A php file to load (ex: 'single.php').
+     * @param array|bool                     $tparams         An array of data to send to the php file. Inside the php file this data can be accessed via: `global $params;`.
+     * @param WP_Query|callable|array|string $query           A WP_Query object, a callable that returns a WP_Query object, an array of query vars, or a query string. This will be used to set the main query for the request, which can be accessed with the global $wp_query variable in the template file. If a callable is passed, it will be called at the time of the 'parse_request' action, and should return a WP_Query object.
+     * @param int                            $status_code     A code for the status (ex: 200).
+     * @param int                            $priority        The priority used by the "template_include" filter.
      * @return bool
      */
     public static function load($template, $tparams = false, $query = false, $status_code = 200, $priority = 10)
@@ -257,7 +255,7 @@ class Routes
         if ($template) {
             add_filter(
                 'template_include',
-                fn() => $template,
+                fn($current_template) => $template,
                 $priority
             );
 

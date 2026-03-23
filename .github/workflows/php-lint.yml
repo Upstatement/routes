@@ -3,13 +3,13 @@ name: PHP lint
 on:
   push:
     branches:
-      - 2.x
+      - master
     paths:
       - "**.php"
       - "**composer.json"
   pull_request:
     branches:
-      - 2.x
+      - master
     paths:
       - "**.php"
       - "**composer.json"

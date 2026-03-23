@@ -260,7 +260,7 @@ class RoutesTest extends Integration_Test_Case
 		$this->assertEquals(1, count($matches));
 	}
 
-	public function testVerySimpleRoutePreceedingSlash()
+	function testVerySimpleRoutePrecedingSlash()
 	{
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		global $matches;
@@ -358,6 +358,7 @@ class RoutesTest extends Integration_Test_Case
 	public static function _testCallback()
 	{
 		global $matches_class_test;
+		$matches_class_test = [];
 		$matches_class_test[] = true;
 	}
 }
