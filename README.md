@@ -71,6 +71,47 @@ Routes::map('color/[hex:color]', function($params) {
 
 In 0.x, including `Routes.php` immediately instantiated the class and registered WordPress hooks. In 1.x, the singleton is created lazily on the first call to `Routes::map()` or `Routes::add_match_types()`. No action is required as long as you call `Routes::map()` before `wp_loaded` fires, which is the standard usage pattern.
 
+### Base path handling for subdirectory installs
+
+**⚠️ Potential breaking change for WordPress subdirectory installations**
+
+In 0.x, the base path logic was route-dependent and would detect if you included the subdirectory in your route pattern. In 1.x, the base path is always calculated from your site URL regardless of your route patterns.
+
+If your WordPress site is installed in a subdirectory (e.g., `https://example.com/blog/`) and your routes **included** that subdirectory in the pattern, those routes will break in 1.x.
+
+**Example of code that will break:**
+
+```php
+// Site URL: https://example.com/blog/
+// WordPress installed in /blog/ subdirectory
+
+// This route WILL BREAK in 1.x:
+Routes::map('blog/my-page', function($params) {
+    // This won't match anymore because AltoRouter strips /blog/
+    // and then tries to match the remainder against 'blog/my-page'
+});
+```
+
+**How to fix it:**
+
+Simply remove the subdirectory prefix from your route patterns:
+
+```php
+// Site URL: https://example.com/blog/
+// WordPress installed in /blog/ subdirectory
+
+// ✅ Correct way to define routes in 1.x:
+Routes::map('my-page', function($params) {
+    // This will correctly match https://example.com/blog/my-page
+});
+
+Routes::map('my-users/:userid/edit', function($params) {
+    // This will correctly match https://example.com/blog/my-users/123/edit
+});
+```
+
+**Note:** If your site is **not** in a subdirectory, or if your routes never included the subdirectory prefix, this change does not affect you.
+
 ### Basic Usage
 
 ```php
