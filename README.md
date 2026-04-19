@@ -5,6 +5,113 @@ Simple routing for WordPress. Designed for usage with [Timber](https://github.co
 [![PHP unit tests](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml/badge.svg?branch=master)](https://github.com/Upstatement/routes/actions/workflows/php-unit-tests.yml?query=branch:master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/Upstatement/routes.svg?style=flat-square)](https://packagist.org/packages/Upstatement/routes)
 
+## Installation
+
+Install via [Composer](https://getcomposer.org/):
+
+```bash
+composer require upstatement/routes
+```
+
+Then make sure Composer's autoloader is included in your project. In a standard WordPress setup this is typically done in `functions.php` or your plugin's main file:
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+```
+
+If you're using a WordPress-specific Composer setup (e.g. [Bedrock](https://roots.io/bedrock/)), the autoloader is usually already loaded for you.
+
+## Upgrading to 1.x
+
+Version 1.0 introduces several breaking changes. If you're upgrading from 0.x, read through the following sections to make sure your code is compatible.
+
+### PHP 8.2+ required
+
+Routes now requires PHP 8.2 or higher.
+
+### Singleton — no direct instantiation
+
+The class is now a singleton. You can no longer instantiate it directly:
+
+```php
+// Before (0.x) — no longer works
+$routes = new Routes();
+
+// After (1.x)
+$instance = Routes::get_instance();
+```
+
+In practice most applications never instantiated `Routes` directly, so this is unlikely to affect you.
+
+### No more global `$upstatement_routes`
+
+The global variable `$upstatement_routes` used internally in 0.x has been removed. If your code accessed called `$upstatement_routes->match_current_request()` directly, update it:
+
+```php
+// Before (0.x)
+global $upstatement_routes;
+$upstatement_routes->match_current_request();
+
+// After (1.x)
+Routes::get_instance()->match_current_request();
+```
+
+### New `add_match_types()` method
+
+Custom AltoRouter match types can now be registered via `Routes::add_match_types()` and may be called before or after `Routes::map()`:
+
+```php
+Routes::add_match_types(['hex' => '[0-9A-Fa-f]+']);
+Routes::map('color/[hex:color]', function($params) {
+    // $params['color'] is guaranteed to be a hex string
+});
+```
+
+### Class is no longer auto-instantiated on include
+
+In 0.x, including `Routes.php` immediately instantiated the class and registered WordPress hooks. In 1.x, the singleton is created lazily on the first call to `Routes::map()` or `Routes::add_match_types()`. No action is required as long as you call `Routes::map()` before `wp_loaded` fires, which is the standard usage pattern.
+
+### Base path handling for subdirectory installs
+
+**⚠️ Potential breaking change for WordPress subdirectory installations**
+
+In 0.x, the base path logic was route-dependent and would detect if you included the subdirectory in your route pattern. In 1.x, the base path is always calculated from your site URL regardless of your route patterns.
+
+If your WordPress site is installed in a subdirectory (e.g., `https://example.com/blog/`) and your routes **included** that subdirectory in the pattern, those routes will break in 1.x.
+
+**Example of code that will break:**
+
+```php
+// Site URL: https://example.com/blog/
+// WordPress installed in /blog/ subdirectory
+
+// This route WILL BREAK in 1.x:
+Routes::map('blog/my-page', function($params) {
+    // This won't match anymore because AltoRouter strips /blog/
+    // and then tries to match the remainder against 'blog/my-page'
+});
+```
+
+**How to fix it:**
+
+Simply remove the subdirectory prefix from your route patterns:
+
+```php
+// Site URL: https://example.com/blog/
+// WordPress installed in /blog/ subdirectory
+
+// ✅ Correct way to define routes in 1.x:
+Routes::map('my-page', function($params) {
+    // This will correctly match https://example.com/blog/my-page
+});
+
+Routes::map('my-users/:userid/edit', function($params) {
+    // This will correctly match https://example.com/blog/my-users/123/edit
+});
+```
+
+**Note:** If your site is **not** in a subdirectory, or if your routes never included the subdirectory prefix, this change does not affect you.
+
 ### Basic Usage
 
 ```php
@@ -127,3 +234,27 @@ The query you want to use, it can accept a string or array just like `Timber::ge
 
 `$status_code`
 Send an optional status code. Defaults to 200 for 'Success/OK'
+
+## add_match_types
+
+This method makes it possible to add custom match types in Routes.
+
+```php
+<?php
+/* functions.php */
+
+Routes::add_match_types([
+	'oldID' => '@[0-9]++',
+]);
+
+Routes::map(
+	'[oldID:id]/[:slug]',
+	function ($params) {
+		$old_id = $params['id'];
+		$slug = $params['slug'];
+
+		/* the rest as normal... */
+		Timber::render('single.php', $context);
+	}
+);
+```

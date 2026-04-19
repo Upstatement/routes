@@ -1,43 +1,70 @@
 <?php
 
 /**
- * Plugin Name:                 Routes
- * Plugin URI:                  http://www.upstatement.com
- * Description:                 Routes makes it easy to add custom routing to your WordPress site. That's why we call it Routes. That is all.
- * Author:                      Jared Novack + Upstatement
- * Author URI:                  http://www.upstatement.com
- * Text Domain:                 routes
- * Version:                     0.9.2
- */
-
-/**
+ * Routes makes it easy to add custom routing to your WordPress site. That's why we call it Routes. That is all.
+ * 
  * The Routes class is responsible for defining the routing functionality of the plugin.
  * It uses the AltoRouter library to match the current request to the defined routes,
  * and to call the appropriate callback function when a route is matched.
  * It also provides a method for loading a template file and sending data to it, which can be used in the callback functions for the routes defined with the map() method.
- *
- * @package Routes
  */
 class Routes
 {
     /**
-     * The AltoRouter instance used to match the current request to the defined routes.
-     *
-     * @var AltoRouter
+     * The singleton instance of the Routes class.
      */
-    protected $router;
+    private static ?self $instance = null;
 
     /**
-     * Constructor.
+     * The version of the library.
+     */
+    public static $version = '1.0.0'; // x-release-please-version
+    /**
+     * The AltoRouter instance used to match the current request to the defined routes.
+     */
+    protected ?AltoRouter $router = null;
+
+    /**
+     * Private constructor to enforce the singleton pattern.
      *
      * Adds the match_current_request function to the init and wp_loaded hooks,
      * which will check if the current request matches any of the routes defined in this plugin,
      * and if so, will call the appropriate callback function.
      */
-    public function __construct()
+    private function __construct()
     {
-        add_action('init', [self::class, 'match_current_request']);
-        add_action('wp_loaded', [self::class, 'match_current_request']);
+        add_action('init', [$this, 'match_current_request']);
+        add_action('wp_loaded', [$this, 'match_current_request']);
+    }
+
+    /**
+     * Returns the singleton instance, creating it if it does not yet exist.
+     */
+    public static function get_instance(): self
+    {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Initializes the AltoRouter instance if it has not been created yet.
+     * Called lazily by map() and add_match_types().
+     */
+    private function ensure_router(): void
+    {
+        if (null !== $this->router) {
+            return;
+        }
+        $this->router = new AltoRouter();
+        $site_url = get_bloginfo('url');
+        $site_url_parts = explode('/', $site_url);
+        $site_url_parts = array_slice($site_url_parts, 3);
+        $base_path = implode('/', $site_url_parts);
+        $base_path = $base_path ? '/' . trim($base_path, '/') . '/' : '/';
+        $this->router->setBasePath($base_path);
     }
 
     /**
@@ -46,34 +73,48 @@ class Routes
      *
      * @internal
      */
-    public static function match_current_request()
+    public function match_current_request()
     {
-        global $upstatement_routes;
-        if (isset($upstatement_routes->router)) {
-            $route = $upstatement_routes->router->match();
-
-            unset($upstatement_routes->router);
-
-            if ($route && isset($route['target'])) {
-                if (isset($route['params'])) {
-                    call_user_func($route['target'], $route['params']);
-                } else {
-                    call_user_func($route['target']);
-                }
-            }
+        if (null == $this->router) {
+            return;
         }
+
+        $route = $this->router->match();
+        $this->router = null;
+
+        if ($route && isset($route['target'])) {
+            call_user_func($route['target'], ...array_filter([$route['params'] ?? null]));
+        }
+    }
+
+    /**
+     * Wrapper for AltoRouter's addMatchTypes function. See AltoRouter documentation for more details.
+     *
+     * @api
+     *
+     * @link https://dannyvankooten.github.io/AltoRouter/usage/mapping-routes.html
+     *
+     * @param array $match_types An array of custom match types to add to AltoRouter.
+     *                           Keys are type names and values are regex patterns.
+     *                           ex: Routes::add_match_types(['hex' => '[0-9A-Fa-f]+']);
+     */
+    public static function add_match_types($match_types)
+    {
+        $instance = self::get_instance();
+        $instance->ensure_router();
+        $instance->router->addMatchTypes($match_types);
     }
 
     /**
      * Maps a route to a callback function.
      *
      * @api
-     * @param string   $route         A string to match (ex: 'myfoo').
-     * @param callable $callback    A callback function to call when the route is matched.
-     *                                    This can be a string for a function name,
-     *                              an array for a class method, or an anonymous function.
-     * @param string   $name        An optional name for the route, which can be used to generate URLs with the url() method.
-     * @return void
+     *
+     * @param string   $route    a string to match (ex: 'myfoo')
+     * @param callable $callback A callback function to call when the route is matched.
+     *                           This can be a string for a function name,
+     *                           an array for a class method, or an anonymous function.
+     * @param string   $name     an optional name for the route, which can be used to generate URLs with the url() method
      *
      * @example
      * ```php
@@ -86,38 +127,25 @@ class Routes
      */
     public static function map($route, $callback, $name = '')
     {
-        global $upstatement_routes;
-        if (!isset($upstatement_routes->router)) {
-            $upstatement_routes->router = new AltoRouter();
-            $site_url = get_bloginfo('url');
-            $site_url_parts = explode('/', $site_url);
-            $site_url_parts = array_slice($site_url_parts, 3);
-            $base_path = implode('/', $site_url_parts);
-            if (!$base_path || str_starts_with($route, $base_path)) {
-                $base_path = '/';
-            } else {
-                $base_path = '/' . $base_path . '/';
-            }
-            // Clean any double slashes that have resulted
-            $base_path = str_replace('//', '/', $base_path);
-            $upstatement_routes->router->setBasePath($base_path);
-        }
+        $instance = self::get_instance();
+        $instance->ensure_router();
         $route = self::convert_route($route);
-        $upstatement_routes->router->map('GET|POST|PUT|DELETE|HEAD', trailingslashit($route), $callback, $name);
-        $upstatement_routes->router->map('GET|POST|PUT|DELETE|HEAD', untrailingslashit($route), $callback, $name);
+        $instance->router->map('GET|POST|PUT|DELETE|HEAD', trailingslashit($route), $callback, $name);
+        $instance->router->map('GET|POST|PUT|DELETE|HEAD', untrailingslashit($route), $callback, $name);
     }
 
     /**
-     *
      * Used internally to convert a route string with :param style parameters
      * to the format used by AltoRouter, which is [:param].
      * If the route string already contains [ and ] characters,
      * it is assumed to be in the correct format and is returned unchanged.
      *
      * @internal
-     * @param string $route_string A route string with :param style parameters (ex: 'myfoo/:my_param').
-     * @return string                   A string in a format for AltoRouter
-     *                                  ex: [:my_param]
+     *
+     * @param string $route_string a route string with :param style parameters (ex: 'myfoo/:my_param')
+     *
+     * @return string A string in a format for AltoRouter
+     *                ex: [:my_param]
      */
     public static function convert_route($route_string)
     {
@@ -132,6 +160,7 @@ class Routes
         if (str_starts_with($route_string, '/')) {
             $route_string = substr($route_string, 1);
         }
+
         return $route_string;
     }
 
@@ -162,8 +191,8 @@ class Routes
                 'status_header',
                 function ($status_header, $header, $text, $protocol) use ($status_code) {
                     $text = get_status_header_desc($status_code);
-                    $header_string = "$protocol $status_code $text";
-                    return $header_string;
+
+                    return "{$protocol} {$status_code} {$text}";
                 },
                 10,
                 4
@@ -216,18 +245,10 @@ class Routes
                 fn($current_template) => $template,
                 $priority
             );
+
             return true;
         }
+
         return false;
     }
-}
-
-global $upstatement_routes;
-$upstatement_routes = new Routes();
-
-if (
-    file_exists($composer_autoload = __DIR__ . '/vendor/autoload.php')
-    || file_exists($composer_autoload = WP_CONTENT_DIR . '/vendor/autoload.php')
-) {
-    require_once $composer_autoload;
 }
