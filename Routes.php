@@ -59,6 +59,9 @@ class Routes
             return;
         }
         $this->router = new AltoRouter();
+        // Add custom match type that supports dots (for version numbers, semantic versioning, etc.)
+        // This allows routes like /download/:version to match /download/1.5.1
+        $this->router->addMatchTypes(['slug' => '[a-zA-Z0-9._-]+']);
         $site_url = get_bloginfo('url');
         $site_url_parts = explode('/', $site_url);
         $site_url_parts = array_slice($site_url_parts, 3);
@@ -140,19 +143,23 @@ class Routes
      * If the route string already contains [ and ] characters,
      * it is assumed to be in the correct format and is returned unchanged.
      *
+     * Note: Default parameters are converted to [slug:param] to support dots,
+     * underscores, and hyphens in parameter values (e.g., version numbers like 1.5.1).
+     *
      * @internal
      *
      * @param string $route_string a route string with :param style parameters (ex: 'myfoo/:my_param')
      *
      * @return string A string in a format for AltoRouter
-     *                ex: [:my_param]
+     *                ex: [slug:my_param] (supports dots in values)
      */
     public static function convert_route($route_string)
     {
         if (str_contains($route_string, '[')) {
             return $route_string;
         }
-        $route_string = preg_replace('/(:)\w+/', '/[$0]', $route_string);
+        // Convert :param to [slug:param] to support dots, underscores, and hyphens
+        $route_string = preg_replace('/(:)(\w+)/', '/[slug:$2]', $route_string);
         $route_string = str_replace('[[', '[', $route_string);
         $route_string = str_replace(']]', ']', $route_string);
         $route_string = str_replace('[/:', '[:', $route_string);
