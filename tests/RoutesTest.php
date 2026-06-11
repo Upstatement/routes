@@ -353,7 +353,6 @@ class RoutesTest extends Integration_Test_Case
 	public function testRouteWithDecimalParameter()
 	{
 		// Test for issue #45: routes with decimal numbers (e.g., version numbers like 1.5.1)
-		$phpunit = $this;
 		global $matches;
 		$matches = [];
 		Routes::map(
@@ -368,7 +367,7 @@ class RoutesTest extends Integration_Test_Case
 		);
 		$this->get(home_url('/download/1.5.1'));
 		$this->matchRoutes();
-		$this->assertEquals(1, count($matches));
+		$this->assertCount(1, $matches);
 	}
 
 	public function matchRoutes()
