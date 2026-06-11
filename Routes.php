@@ -61,7 +61,7 @@ class Routes
         $this->router = new AltoRouter();
         // Add custom match type that supports dots (for version numbers, semantic versioning, etc.)
         // This allows routes like /download/:version to match /download/1.5.1
-        $this->router->addMatchTypes(['slug' => '[a-zA-Z0-9._-]+']);
+        $this->router->addMatchTypes(['slug' => '[a-zA-Z0-9._-]++']);
         $site_url = get_bloginfo('url');
         $site_url_parts = explode('/', $site_url);
         $site_url_parts = array_slice($site_url_parts, 3);
@@ -159,7 +159,7 @@ class Routes
             return $route_string;
         }
         // Convert :param to [slug:param] to support dots, underscores, and hyphens
-        $route_string = preg_replace('/(:)(\w+)/', '/[slug:$2]', $route_string);
+        $route_string = preg_replace('/:(\w+)/', '[slug:$1]', $route_string);
         $route_string = str_replace('[[', '[', $route_string);
         $route_string = str_replace(']]', ']', $route_string);
         $route_string = str_replace('[/:', '[:', $route_string);
