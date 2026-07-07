@@ -59,9 +59,11 @@ class Routes
             return;
         }
         $this->router = new AltoRouter();
-        // Add custom match type that supports dots (for version numbers, semantic versioning, etc.)
-        // This allows routes like /download/:version to match /download/1.5.1
-        $this->router->addMatchTypes(['slug' => '[a-zA-Z0-9._-]++']);
+        // Add a custom match type for named parameters that matches any character
+        // except a slash. Unlike AltoRouter's default param type it allows dots, so
+        // routes like /download/:version match version numbers (1.5.1); unlike an
+        // explicit allow-list it keeps matching Unicode segments (e.g. /blog/café).
+        $this->router->addMatchTypes(['slug' => '[^/]++']);
         $site_url = get_bloginfo('url');
         $site_url_parts = explode('/', $site_url);
         $site_url_parts = array_slice($site_url_parts, 3);

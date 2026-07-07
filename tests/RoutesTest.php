@@ -370,6 +370,28 @@ class RoutesTest extends Integration_Test_Case
 		$this->assertCount(1, $matches);
 	}
 
+	public function testRouteWithUnicodeParameter()
+	{
+		// A named parameter must still match Unicode segments (accented characters,
+		// etc.) — the slug match type excludes only slashes, so it does not regress
+		// non-ASCII URLs like /blog/café. Raised in review of #52.
+		global $matches;
+		$matches = [];
+		Routes::map(
+			'blog/:slug',
+			function ($params) {
+				global $matches;
+				$matches = [];
+				if ('café' === $params['slug']) {
+					$matches[] = true;
+				}
+			}
+		);
+		$this->get(home_url('/blog/café'));
+		$this->matchRoutes();
+		$this->assertCount(1, $matches);
+	}
+
 	public function matchRoutes()
 	{
 		Routes::get_instance()->match_current_request();
