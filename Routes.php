@@ -255,6 +255,13 @@ class Routes
                 $priority
             );
 
+            // Prevent WordPress's own canonical redirect logic from hijacking a matched
+            // route. This most commonly happens when the requested slug also matches an
+            // attachment: WordPress will otherwise redirect straight to the raw upload
+            // file via `redirect_canonical()` before `template_include` ever runs.
+            // @see https://github.com/Upstatement/routes/issues/13
+            add_filter('redirect_canonical', '__return_false');
+
             return true;
         }
 
