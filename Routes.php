@@ -18,7 +18,7 @@ class Routes
     /**
      * The version of the library.
      */
-    public static $version = '1.0.0'; // x-release-please-version
+    public static $version = '1.0.0-rc.1'; // x-release-please-version
     /**
      * The AltoRouter instance used to match the current request to the defined routes.
      */
