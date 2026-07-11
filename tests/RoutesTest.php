@@ -435,7 +435,7 @@ class RoutesTest extends Integration_Test_Case
 		$response = $this->get(home_url('/books/'));
 
 		$response->assertOk();
-		$this->assertEquals(1, count($matches));
+		$this->assertCount(1, $matches);
 	}
 
 	public function testUnmatchedRouteDoesNotAffectCanonicalRedirects()
@@ -477,7 +477,7 @@ class RoutesTest extends Integration_Test_Case
 		$_SERVER['REQUEST_URI'] = '/no-op/';
 		$this->matchRoutes();
 
-		$this->assertEquals(1, count($matches));
+		$this->assertCount(1, $matches);
 
 		$response = $this->get(home_url('/?p=' . $post_id));
 
