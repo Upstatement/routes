@@ -484,6 +484,116 @@ class RoutesTest extends Integration_Test_Case
 		$response->assertRedirect(get_permalink($post_id));
 	}
 
+	public function testNamedRouteMatchesRequest()
+	{
+		// Regression test for issue #11: map() registered the same name on both slash
+		// variants of the route, and AltoRouter refuses a name it has already seen, so
+		// the documented third argument threw "Can not redeclare route" on every use.
+		global $matches;
+		$matches = [];
+		Routes::map(
+			'named-artist/:artist',
+			function ($params) {
+				global $matches;
+				$matches = [];
+				if ('bowie' === $params['artist']) {
+					$matches[] = true;
+				}
+			},
+			'named-artist'
+		);
+		$this->get(home_url('/named-artist/bowie'));
+		$this->matchRoutes();
+		$this->assertCount(1, $matches);
+	}
+
+	public function testUrlGeneratesPathForNamedRoute()
+	{
+		Routes::map('named-users/:userid/edit', function ($params) {}, 'named-user-edit');
+
+		$this->assertSame(
+			wp_parse_url(home_url('/named-users/123/edit'), PHP_URL_PATH),
+			Routes::url('named-user-edit', ['userid' => 123])
+		);
+	}
+
+	public function testUrlGeneratesPathAfterRequestHasBeenMatched()
+	{
+		// match_current_request() releases the AltoRouter instance, but a template
+		// rendered later in the same request still has to be able to build the URL.
+		Routes::map('named-events/:event', function ($params) {}, 'named-event');
+		$this->get(home_url('/named-events/gig'));
+		$this->matchRoutes();
+
+		$this->assertSame(
+			wp_parse_url(home_url('/named-events/gig'), PHP_URL_PATH),
+			Routes::url('named-event', ['event' => 'gig'])
+		);
+	}
+
+	public function testUrlLeavesOutAnAbsentOptionalParameter()
+	{
+		Routes::map('named-archive/:year?', function ($params) {}, 'named-archive');
+
+		$this->assertSame(
+			wp_parse_url(home_url('/named-archive/2026'), PHP_URL_PATH),
+			Routes::url('named-archive', ['year' => 2026])
+		);
+		$this->assertSame(
+			wp_parse_url(home_url('/named-archive/'), PHP_URL_PATH),
+			Routes::url('named-archive')
+		);
+	}
+
+	public function testUrlThrowsForAnUnknownRouteName()
+	{
+		$this->expectException(RuntimeException::class);
+
+		Routes::url('a-route-that-was-never-mapped');
+	}
+
+	public function testOptionalParameterCallbackRunsWhenTheValueIsAbsent()
+	{
+		// Regression test for issue #11: AltoRouter's optional parameter syntax already
+		// matched, but an absent value left the params array empty and the callback was
+		// then called with no argument at all, so the function ($params) callback form
+		// the README documents died with an ArgumentCountError.
+		global $matches;
+		$matches = [];
+		Routes::map(
+			'optional-events/:event?',
+			function ($params) {
+				global $matches;
+				$matches = [];
+				$matches[] = $params;
+			}
+		);
+		$this->get(home_url('/optional-events'));
+		$this->matchRoutes();
+
+		$this->assertCount(1, $matches);
+		$this->assertSame([], $matches[0]);
+	}
+
+	public function testOptionalParameterCallbackReceivesTheValueWhenPresent()
+	{
+		global $matches;
+		$matches = [];
+		Routes::map(
+			'optional-shows/:show?',
+			function ($params) {
+				global $matches;
+				$matches = [];
+				$matches[] = $params;
+			}
+		);
+		$this->get(home_url('/optional-shows/ziggy'));
+		$this->matchRoutes();
+
+		$this->assertCount(1, $matches);
+		$this->assertSame(['show' => 'ziggy'], $matches[0]);
+	}
+
 	public function matchRoutes()
 	{
 		Routes::get_instance()->match_current_request();
