@@ -25,6 +25,16 @@ class Routes
     protected ?AltoRouter $router = null;
 
     /**
+     * The routes that were mapped with a name, keyed by that name.
+     *
+     * Kept on the instance rather than only inside AltoRouter so that url() can
+     * still generate a path after match_current_request() has released the router.
+     *
+     * @var array<string, string>
+     */
+    private array $named_routes = [];
+
+    /**
      * Private constructor to enforce the singleton pattern.
      *
      * Adds the match_current_request function to the init and wp_loaded hooks,
@@ -64,12 +74,21 @@ class Routes
         // routes like /download/:version match version numbers (1.5.1); unlike an
         // explicit allow-list it keeps matching Unicode segments (e.g. /blog/café).
         $this->router->addMatchTypes(['slug' => '[^/]++']);
+        $this->router->setBasePath($this->base_path());
+    }
+
+    /**
+     * Returns the path WordPress is installed under, wrapped in slashes.
+     * ex: '/' for a root install, '/blog/' for a subdirectory install.
+     */
+    private function base_path(): string
+    {
         $site_url = get_bloginfo('url');
         $site_url_parts = explode('/', $site_url);
         $site_url_parts = array_slice($site_url_parts, 3);
         $base_path = implode('/', $site_url_parts);
-        $base_path = $base_path ? '/' . trim($base_path, '/') . '/' : '/';
-        $this->router->setBasePath($base_path);
+
+        return $base_path ? '/' . trim($base_path, '/') . '/' : '/';
     }
 
     /**
@@ -88,7 +107,11 @@ class Routes
         $this->router = null;
 
         if ($route && isset($route['target'])) {
-            call_user_func($route['target'], ...array_filter([$route['params'] ?? null]));
+            // Always hand the callback its parameters, even when the matched route
+            // has none or its optional parameters were absent from the request.
+            // Dropping the argument makes callbacks declared as function ($params)
+            // -- the form used throughout the README -- fatal on those requests.
+            call_user_func($route['target'], $route['params'] ?? []);
         }
     }
 
@@ -135,8 +158,54 @@ class Routes
         $instance = self::get_instance();
         $instance->ensure_router();
         $route = self::convert_route($route);
-        $instance->router->map('GET|POST|PUT|DELETE|HEAD', trailingslashit($route), $callback, $name);
-        $instance->router->map('GET|POST|PUT|DELETE|HEAD', untrailingslashit($route), $callback, $name);
+        $unslashed = untrailingslashit($route);
+        // A route is mapped in both slash variants so it matches either way, but only
+        // one of them may carry the name: AltoRouter rejects a name it has already
+        // seen, so naming both would throw on every named route.
+        $instance->router->map('GET|POST|PUT|DELETE|HEAD', trailingslashit($route), $callback);
+        $instance->router->map('GET|POST|PUT|DELETE|HEAD', $unslashed, $callback, $name);
+
+        if ($name) {
+            $instance->named_routes[$name] = $unslashed;
+        }
+    }
+
+    /**
+     * Generates the path of a route that was mapped with a name.
+     *
+     * @api
+     *
+     * @param string $name   the name given as map()'s third argument
+     * @param array  $params values for the route's named parameters, keyed by
+     *                       parameter name (ex: ['userid' => 123])
+     *
+     * @return string A path relative to the site root, including the subdirectory
+     *                WordPress is installed under, if any. Optional parameters that
+     *                are not supplied are left out.
+     *
+     * @throws RuntimeException if no route was mapped under that name
+     *
+     * @example
+     * ```php
+     * Routes::map('my-users/:userid/edit', 'my_callback_function', 'user-edit');
+     * $href = Routes::url('user-edit', ['userid' => 123]); // '/my-users/123/edit'
+     * ```
+     */
+    public static function url($name, $params = [])
+    {
+        $instance = self::get_instance();
+
+        if (!isset($instance->named_routes[$name])) {
+            throw new RuntimeException("Route '{$name}' does not exist.");
+        }
+
+        // Generating from a dedicated AltoRouter instance keeps reverse routing
+        // available after match_current_request() has released the matching one.
+        $generator = new AltoRouter();
+        $generator->setBasePath($instance->base_path());
+        $generator->map('GET', $instance->named_routes[$name], null, $name);
+
+        return $generator->generate($name, $params);
     }
 
     /**

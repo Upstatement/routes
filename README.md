@@ -147,7 +147,7 @@ Routes::map('blog/:name/page/:pg', function($params){
 
 ## map
 
-`Routes::map($pattern, $callback)`
+`Routes::map($pattern, $callback, $name = '')`
 
 ### Usage
 
@@ -181,6 +181,21 @@ page/:pagenum
 my-users/:userid/edit
 ```
 
+**Optional parameters**
+
+End a parameter with `?` to make it optional, so one route can serve the request with and without that segment:
+
+```php
+<?php
+Routes::map('events/:event?', function($params){
+	if (isset($params['event'])) {
+		// /events/my-gig
+	} else {
+		// /events
+	}
+});
+```
+
 `$callback`
 A function that should fire when the pattern matches the request. Callback takes one argument which is an array of the parameters passed in the URL.
 
@@ -190,6 +205,43 @@ So in this example: `'info/:name/page/:pg'`, $params would have data for:
 - `$data['pg']`
 
 ... which you can use in the callback function as a part of your query
+
+The array is always passed, so a route with no parameters — or one whose optional parameter was left out of the request — calls the callback with an empty array rather than no argument at all.
+
+`$name`
+An optional name for the route, which you can pass to `Routes::url()` to build the route's URL somewhere else in your theme:
+
+```php
+<?php
+Routes::map('my-users/:userid/edit', 'my_callback_function', 'user-edit');
+```
+
+---
+
+## url
+
+`Routes::url($name, $params = [])`
+
+Builds the path of a route that was mapped with a name, filling in its parameters. Handy in a template, so links are generated from the route definition instead of being written out by hand:
+
+```php
+<?php
+/* functions.php */
+Routes::map('my-users/:userid/edit', 'my_callback_function', 'user-edit');
+
+/* somewhere in your theme */
+echo Routes::url('user-edit', array('userid' => 123)); // /my-users/123/edit
+```
+
+### Arguments
+
+`$name` (required)
+The name the route was mapped with. A name that was never mapped throws a `RuntimeException`.
+
+`$params`
+An array of values for the route's parameters, keyed by parameter name. An optional parameter you leave out is dropped from the path.
+
+The returned path is relative to the site root and already includes the subdirectory WordPress is installed under, if any, so it can go straight into an `href`.
 
 ---
 
